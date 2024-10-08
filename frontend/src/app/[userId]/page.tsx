@@ -18,7 +18,7 @@ export default function Page({ params }: { params: { userId: string } }) {
 
   useEffect(() => {
     // Initialize socket connection
-    const socketConnection = io("http://localhost:8000/", {
+    const socketConnection = io("https://chatapp-next-vi8m.onrender.com", {
       autoConnect: false,
     });
     socketConnection.connect();
