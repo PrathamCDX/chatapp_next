@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
@@ -8,6 +9,7 @@ interface Message {
 }
 
 export default function Page({ params }: { params: { userId: string } }) {
+  const [loading, setLoading] = useState(true);
   const [allMessages, setAllMessages] = useState<Message[]>([]);
   const [socket, setSocket] = useState<any>(null);
   const [messageToBeSent, setMessageToBeSent] = useState("");
@@ -44,7 +46,22 @@ export default function Page({ params }: { params: { userId: string } }) {
     };
   }, [userId]);
 
-  // Send message to socket
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "https://chatapp-next-vi8m.onrender.com/"
+      );
+      console.log(response.data); // Handle the response data
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    setLoading(true);
+    fetchData();
+    setLoading(false);
+  }, []);
+
   const sendMessage = (roomId: string) => {
     if (socket && messageToBeSent) {
       socket.emit("sendMessage", { message: messageToBeSent, roomId: roomId });
@@ -52,6 +69,16 @@ export default function Page({ params }: { params: { userId: string } }) {
       setMessageToBeSent(""); // Clear the message input after sending
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[100vh] content-center ">
+        <div className="font-bold items-center content-center">
+          Please wait while we start the server
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -85,7 +112,7 @@ export default function Page({ params }: { params: { userId: string } }) {
 
       <div className="mt-4">
         <h3>Messages:</h3>
-        <div className="overflow-x-scroll">
+        <div className="overflow-y-scroll">
           {allMessages.length > 0 ? (
             allMessages.map((msg, index) => (
               <div key={index} className="p-2 border-b">
