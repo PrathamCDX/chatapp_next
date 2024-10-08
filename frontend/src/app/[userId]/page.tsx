@@ -55,7 +55,7 @@ export default function Page({ params }: { params: { userId: string } }) {
 
   return (
     <div>
-      <div>My Post: {encryptedUserId}</div>
+      <div>My Room: {encryptedUserId}</div>
       <input
         id="text"
         placeholder="Enter your message"
@@ -66,7 +66,12 @@ export default function Page({ params }: { params: { userId: string } }) {
       />
       <div className="m-2"></div>
 
-      <input id="room" type="text" className="text-black p-2 border rounded" />
+      <input
+        placeholder="Enter room no"
+        id="room"
+        type="text"
+        className="text-black p-2 border rounded"
+      />
       <button
         onClick={() => {
           sendMessage(
