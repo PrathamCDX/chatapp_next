@@ -85,15 +85,17 @@ export default function Page({ params }: { params: { userId: string } }) {
 
       <div className="mt-4">
         <h3>Messages:</h3>
-        {allMessages.length > 0 ? (
-          allMessages.map((msg, index) => (
-            <div key={index} className="p-2 border-b">
-              <strong>Room {msg.roomId}:</strong> {msg.message}
-            </div>
-          ))
-        ) : (
-          <div>No messages yet</div>
-        )}
+        <div className="overflow-x-scroll">
+          {allMessages.length > 0 ? (
+            allMessages.map((msg, index) => (
+              <div key={index} className="p-2 border-b">
+                <strong>Room {msg.roomId}:</strong> {msg.message}
+              </div>
+            ))
+          ) : (
+            <div>No messages yet</div>
+          )}
+        </div>
       </div>
     </div>
   );
