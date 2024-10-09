@@ -23,7 +23,7 @@ export default function Page({ params }: { params: { userId: string } }) {
 
   useEffect(() => {
     // Initialize socket connection
-    const socketConnection = io("http://localhost:8000", {
+    const socketConnection = io("https://chatapp-next-vi8m.onrender.com", {
       autoConnect: false,
     });
     socketConnection.connect();
@@ -58,7 +58,9 @@ export default function Page({ params }: { params: { userId: string } }) {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8000");
+      const response = await axios.get(
+        "https://chatapp-next-vi8m.onrender.com"
+      );
       console.log("resp ", response.status);
     } catch (error) {
       console.log("object");
