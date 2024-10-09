@@ -5,14 +5,17 @@ import { io } from "socket.io-client";
 
 interface Message {
   message: string;
+  image?: any;
   roomId: string;
 }
 
 export default function Page({ params }: { params: { userId: string } }) {
+  const [err, setErr] = useState(false);
   const [loading, setLoading] = useState(true);
   const [allMessages, setAllMessages] = useState<Message[]>([]);
   const [socket, setSocket] = useState<any>(null);
   const [messageToBeSent, setMessageToBeSent] = useState("");
+  const [image, setImage] = useState<any>();
   const encryptedUserId = params.userId;
 
   // Decrypted userId would go here (currently it's the same)
@@ -20,7 +23,7 @@ export default function Page({ params }: { params: { userId: string } }) {
 
   useEffect(() => {
     // Initialize socket connection
-    const socketConnection = io("https://chatapp-next-vi8m.onrender.com", {
+    const socketConnection = io("http://localhost:8000", {
       autoConnect: false,
     });
     socketConnection.connect();
@@ -28,11 +31,19 @@ export default function Page({ params }: { params: { userId: string } }) {
 
     // Listen for messages
     socketConnection.on("recieveMessage", (data: Message) => {
+      console.log(data);
       setAllMessages((prevMessages) => {
         console.log([...prevMessages, data]);
         return [...prevMessages, data];
       });
     });
+
+    // socketConnection.on("recieveImage", (data: Message) => {
+    //   setAllMessages((prevMessages) => {
+    //     console.log([...prevMessages, data]);
+    //     return [...prevMessages, data];
+    //   });
+    // });
 
     // Join room on connection
     if (socketConnection && userId) {
@@ -40,7 +51,6 @@ export default function Page({ params }: { params: { userId: string } }) {
       console.log(`Joined room: ${userId}`);
     }
 
-    // Cleanup on component unmount
     return () => {
       socketConnection.disconnect();
     };
@@ -48,37 +58,85 @@ export default function Page({ params }: { params: { userId: string } }) {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        "https://chatapp-next-vi8m.onrender.com/"
-      );
-      console.log(response.data); // Handle the response data
+      const response = await axios.get("http://localhost:8000");
+      console.log("resp ", response.status);
     } catch (error) {
+      console.log("object");
+      // setErr(true);
       console.error("Error fetching data:", error);
     }
   };
+
+  // const sendImage = (roomId: string) => {
+  //   if (socket && image) {
+  //     socket.emit("sendImage", {
+  //       message: messageToBeSent,
+  //       image: image,
+  //       roomId: roomId,
+  //     });
+  //     setMessageToBeSent("");
+  //     setImage(null);
+  //   }
+  // };
+
+  const sendMessage = (roomId: string) => {
+    if (socket && (messageToBeSent || image)) {
+      socket.emit("sendMessage", {
+        message: messageToBeSent,
+        image: image,
+        roomId: roomId,
+      });
+      console.log(
+        `Sending text: ${messageToBeSent}, image: ${
+          image ? "true" : "false"
+        } Room ID: ${roomId}`
+      );
+      setMessageToBeSent("");
+      setImage(null);
+    }
+  };
+
+  const imgToBlob = (e: any) => {
+    const data = new FileReader();
+    data.addEventListener("load", () => {
+      setImage(data.result);
+      // console.log(data.result);
+    });
+    data.readAsDataURL(e.target.files[0]);
+  };
+
+  // API calls
   useEffect(() => {
     setLoading(true);
     fetchData();
     setLoading(false);
   }, []);
 
-  const sendMessage = (roomId: string) => {
-    if (socket && messageToBeSent) {
-      socket.emit("sendMessage", { message: messageToBeSent, roomId: roomId });
-      console.log(`Sending text: ${messageToBeSent}, Room ID: ${userId}`);
-      setMessageToBeSent(""); // Clear the message input after sending
-    }
-  };
-
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-[100vh] content-center ">
+      <div className="flex items-center justify-center h-[100vh] content-center animate-bounce">
         <div className="font-bold items-center content-center">
           Please wait while we start the server
         </div>
       </div>
     );
   }
+
+  if (err) {
+    return (
+      <div className="flex items-center justify-center h-[100vh] content-center ">
+        <div className="font-bold items-center content-center">
+          Error running server
+        </div>
+      </div>
+    );
+  }
+
+  // return (
+  //   <div>
+  //     <div>Dashboard</div>
+  //   </div>
+  // );
 
   return (
     <div>
@@ -99,6 +157,22 @@ export default function Page({ params }: { params: { userId: string } }) {
         type="text"
         className="text-black p-2 border rounded"
       />
+      <input
+        placeholder="Enter room no"
+        id="file"
+        type="file"
+        className="text-black p-2 border rounded"
+        onChange={(e) => {
+          imgToBlob(e);
+        }}
+      />
+
+      {image ? (
+        <img className="w-auto h-auto block max-h-20 " src={image} alt="" />
+      ) : (
+        <div>No image</div>
+      )}
+
       <button
         onClick={() => {
           sendMessage(
@@ -112,10 +186,22 @@ export default function Page({ params }: { params: { userId: string } }) {
 
       <div className="mt-4">
         <h3>Messages:</h3>
-        <div className="overflow-y-scroll">
+        <div className="flex-col-reverse overflow-y-scroll border-white border rounded-lg px-2 py-1 h-[75vh] md:h-[70vh] ">
           {allMessages.length > 0 ? (
             allMessages.map((msg, index) => (
-              <div key={index} className="p-2 border-b">
+              <div key={index} className="p-2 border-b ">
+                {msg.image ? (
+                  <div>
+                    image
+                    <img
+                      className="w-auto h-auto block max-h-20 "
+                      src={msg.image}
+                      alt=""
+                    />
+                  </div>
+                ) : (
+                  <div>No image</div>
+                )}
                 <strong>Room {msg.roomId}:</strong> {msg.message}
               </div>
             ))

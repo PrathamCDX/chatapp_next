@@ -27,14 +27,16 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", async (args) => {
-    const { message, roomId } = args;
+    const { message, image, roomId } = args;
     socket.join(roomId);
-    socket.broadcast
-      .to(roomId)
-      .emit("recieveMessage", { message: message, roomId: socket.id });
+    socket.broadcast.to(roomId).emit("recieveMessage", {
+      message: message,
+      image: image,
+      roomId: socket.id,
+    });
 
     socket.leave(roomId);
-    console.log(socket.id, args, socket.rooms);
+    console.log(socket.id, message, roomId, socket.rooms);
   });
 
   socket.on("message", (message) => {
