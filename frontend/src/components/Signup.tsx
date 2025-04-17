@@ -37,6 +37,7 @@ const Signup = () => {
     setAuthSignUpResponse(response.data);
     if (response.data.success == true) {
       setLoggedIn && setLoggedIn(true);
+      redirect("/" + username);
     } else {
       alert(response.data.errMessage);
     }
@@ -106,7 +107,7 @@ const Signup = () => {
             }
           }}
         >
-          Sign in
+          Sign up
         </button>
       </div>
     </>

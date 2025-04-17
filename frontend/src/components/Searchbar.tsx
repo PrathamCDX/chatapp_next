@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import { IoMdClose } from "react-icons/io";
 import { TbUserSearch } from "react-icons/tb";
 import { useDetectClickOutside } from "react-detect-click-outside";
 import axios from "axios";
@@ -36,6 +37,14 @@ function SearchDialog({
         ref={ref}
         className="flex flex-col gap-8 items-center justify-evenly border absolute h-fit w-[60vw] rounded-xl backdrop-blur-xl p-7 shadow-lg"
       >
+        <div
+          onClick={() => {
+            setShowDialog(false);
+          }}
+          className="fixed top-2 right-2 border-1 border-white"
+        >
+          <IoMdClose size={30} />
+        </div>
         {searchedUser ? (
           <>
             <AddFriend username={searchedUser} setShowDialog={setShowDialog} />

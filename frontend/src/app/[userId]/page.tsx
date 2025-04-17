@@ -175,28 +175,31 @@ export default function Page({
 
   if (!isAuth) {
     return (
-      <div className="flex items-center justify-center h-[100vh] content-center ">
-        <input
-          className="m-2 bg-transparent border-b-2 text-white outline-none cursor-text"
-          type="text"
-          placeholder="Enter Password"
-          onChange={(e) => {
-            const value = e.currentTarget.value;
-            setPassword((prev) => {
-              return value as string;
-            });
-          }}
-        />
+      <>
+        <div className="flex flex-col items-center justify-center h-[100vh] content-center ">
+          <h1 className="mb-5 text-3xl font-semibold">Hey {userData}</h1>
+          <input
+            className="m-2 bg-transparent border-b-2 text-white outline-none cursor-text"
+            type="text"
+            placeholder="Enter Password"
+            onChange={(e) => {
+              const value = e.currentTarget.value;
+              setPassword((prev) => {
+                return value as string;
+              });
+            }}
+          />
 
-        <button
-          onClick={() => {
-            handleLogIn(userId, password);
-          }}
-          className="border-2 py-1 px-3 rounded-md"
-        >
-          L0g 1n
-        </button>
-      </div>
+          <button
+            onClick={() => {
+              handleLogIn(userId, password);
+            }}
+            className="border-2 py-1 px-3 rounded-md"
+          >
+            L0g 1n
+          </button>
+        </div>
+      </>
     );
   }
 
