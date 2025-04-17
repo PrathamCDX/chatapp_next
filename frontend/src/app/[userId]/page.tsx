@@ -5,6 +5,7 @@ import { decryptor } from "@/encryptDecrypt";
 import axios from "axios";
 import { createContext, use, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import userPageContext from "@/context/userPageContext";
 
 interface Message {
   message: string;
@@ -25,11 +26,10 @@ interface userPageContextType {
   forceRender?: { render: boolean };
   setForceRender?: React.Dispatch<React.SetStateAction<{ render: boolean }>>;
 }
-
 // Create context with an initial value of `undefined` or a default object
-export const userPageContext = createContext<userPageContextType | undefined>(
-  undefined
-);
+// export const userPageContext = createContext<
+//   userPageContextType | undefined | never
+// >(undefined);
 
 export default function Page({
   params,

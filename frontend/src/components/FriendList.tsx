@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import Searchbar from "./Searchbar";
-import { userPageContext } from "@/app/[userId]/page";
+import userPageContext from "@/context/userPageContext";
+// import { userPageContext } from "@/app/[userId]/page";
 import axios from "axios";
 import { axiosResponseInterface } from "@/interfaces/typeinterfaces";
 

@@ -37,6 +37,3 @@ export default function Home() {
   );
   //  <div>{/* <DemoPage /> */}</div>;
 }
-
-export { logInContext };
-export type { logInContextType };

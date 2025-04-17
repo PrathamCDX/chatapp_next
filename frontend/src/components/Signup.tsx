@@ -1,5 +1,7 @@
 "use client";
-import { logInContext, logInContextType } from "@/app/page";
+import logInContext from "@/context/logInContext";
+import { logInContextType } from "@/context/logInContext";
+// import { logInContext, logInContextType } from "@/app/page";
 import { encryptor } from "@/encryptDecrypt";
 import axios, { Axios } from "axios";
 import { redirect } from "next/navigation";

@@ -1,4 +1,5 @@
-import { userPageContext } from "@/app/[userId]/page";
+// import { userPageContext } from "@/app/[userId]/page";
+import userPageContext from "@/context/userPageContext";
 import axios from "axios";
 import { useContext } from "react";
 
