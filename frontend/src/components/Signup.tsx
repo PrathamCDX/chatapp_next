@@ -28,10 +28,12 @@ const Signup = () => {
   const [authSignUpResponse, setAuthSignUpResponse] = useState<any>();
 
   const authSignUp = async ({ username, password }: userDataType) => {
+    console.log(process.env.NEXT_PUBLIC_SOCKET_URI + "auth/signup");
     const response = await axios.post(
       process.env.NEXT_PUBLIC_SOCKET_URI + "auth/signup",
       { username, password }
     );
+
     setAuthSignUpResponse(response.data);
     if (response.data.success == true) {
       setLoggedIn && setLoggedIn(true);
