@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  font-family: "Courier New", Courier, monospace;
+  font-size: large;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -14,6 +19,15 @@
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
+}
+
+.friendlistscrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.friendlistscrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 body {

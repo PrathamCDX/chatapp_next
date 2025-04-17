@@ -22,13 +22,13 @@ export default function DemoPage() {
 
     socketConnection.on("recieveMessage", (data: Message) => {
       setAllMessages((prevMessages) => {
-        console.log([...prevMessages, data]);
+        // console.log([...prevMessages, data]);
         return [...prevMessages, data];
       });
     });
 
     socketConnection.on("getId", (arg) => {
-      console.log("Socket ID:", arg);
+      // console.log("Socket ID:", arg);
     });
 
     setSocket(socketConnection);

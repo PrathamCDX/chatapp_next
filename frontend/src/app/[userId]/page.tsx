@@ -1,6 +1,9 @@
 "use client";
+import FriendList from "@/components/FriendList";
+import Messagebox from "@/components/Messagebox";
+import { decryptor } from "@/encryptDecrypt";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { createContext, use, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
 interface Message {
@@ -9,21 +12,53 @@ interface Message {
   roomId: string;
 }
 
-export default function Page({ params }: { params: { userId: string } }) {
+// Define the type for the context value
+interface userPageContextType {
+  displayMessageBox: boolean;
+  setDisplayMessageBox: React.Dispatch<React.SetStateAction<boolean>>;
+  userData?: any;
+  messageList?: any;
+  setMessageList: React.Dispatch<React.SetStateAction<any>>;
+  currentChatFriend?: any;
+  setCurrentChatFriend?: React.Dispatch<React.SetStateAction<any>>;
+  sendMessageViaSocket?: (roomId: string, messageToBeSent: string) => void;
+  forceRender?: { render: boolean };
+  setForceRender?: React.Dispatch<React.SetStateAction<{ render: boolean }>>;
+}
+
+// Create context with an initial value of `undefined` or a default object
+export const userPageContext = createContext<userPageContextType | undefined>(
+  undefined
+);
+
+export default function Page({
+  params,
+}: {
+  params: Promise<{ userId: string }>;
+}) {
+  const [password, setPassword] = useState("");
   const [err, setErr] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
+  const [messageList, setMessageList] = useState<string[]>([]);
+  const [forceRender, setForceRender] = useState({ render: true });
+  const [windowWidth, setwindowWidth] = useState(window.innerWidth);
+  const [displayMessageBox, setDisplayMessageBox] = useState(false); //use content
+  const [currentChatFriend, setCurrentChatFriend] = useState("Choose a friend"); // use context
   const [loading, setLoading] = useState(true);
   const [allMessages, setAllMessages] = useState<Message[]>([]);
   const [socket, setSocket] = useState<any>(null);
-  const [messageToBeSent, setMessageToBeSent] = useState("");
+  const [messageToBeSent, setMessageToBeSent] = useState(""); // use context
   const [image, setImage] = useState<any>();
-  const encryptedUserId = params.userId;
-
+  const resolvedParams = use(params);
   // Decrypted userId would go here (currently it's the same)
-  const userId = encryptedUserId;
+  const { userId } = resolvedParams;
+  // decrypt userId
+  const userData = userId;
 
   useEffect(() => {
+    console.log("userId is: ", userId);
     // Initialize socket connection
-    const socketConnection = io("https://chatapp-next-vi8m.onrender.com", {
+    const socketConnection = io(process.env.NEXT_PUBLIC_SOCKET_URI, {
       autoConnect: false,
     });
     socketConnection.connect();
@@ -31,19 +66,12 @@ export default function Page({ params }: { params: { userId: string } }) {
 
     // Listen for messages
     socketConnection.on("recieveMessage", (data: Message) => {
-      console.log(data);
-      setAllMessages((prevMessages) => {
-        console.log([...prevMessages, data]);
-        return [...prevMessages, data];
+      setMessageList((prevMessages) => {
+        console.log("recieved via scoket ", data.message);
+        // console.log([...prevMessages, data.message]);
+        return [...prevMessages, "1" + data.message];
       });
     });
-
-    // socketConnection.on("recieveImage", (data: Message) => {
-    //   setAllMessages((prevMessages) => {
-    //     console.log([...prevMessages, data]);
-    //     return [...prevMessages, data];
-    //   });
-    // });
 
     // Join room on connection
     if (socketConnection && userId) {
@@ -56,32 +84,32 @@ export default function Page({ params }: { params: { userId: string } }) {
     };
   }, [userId]);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        "https://chatapp-next-vi8m.onrender.com"
-      );
-      console.log("resp ", response.status);
-    } catch (error) {
-      console.log("object");
-      // setErr(true);
-      console.error("Error fetching data:", error);
+  const handleLogIn = async (username: string, password: string) => {
+    console.log(username, password);
+    const response = await axios.post(
+      process.env.NEXT_PUBLIC_SOCKET_URI + "auth/signin",
+      { username: username, password: password }
+    );
+
+    if (response.data.success == true) {
+      setIsAuth(true);
+    } else {
+      alert("error in login");
     }
   };
 
-  // const sendImage = (roomId: string) => {
-  //   if (socket && image) {
-  //     socket.emit("sendImage", {
-  //       message: messageToBeSent,
-  //       image: image,
-  //       roomId: roomId,
-  //     });
-  //     setMessageToBeSent("");
-  //     setImage(null);
-  //   }
-  // };
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/");
+      // console.log("resp ", response.data);
+    } catch (error) {
+      // console.log("object");
+      // setErr(true);
+      console.error("Error fetching data: ", error);
+    }
+  };
 
-  const sendMessage = (roomId: string) => {
+  const sendMessageViaSocket = (roomId: string, messageToBeSent: string) => {
     if (socket && (messageToBeSent || image)) {
       socket.emit("sendMessage", {
         message: messageToBeSent,
@@ -102,18 +130,39 @@ export default function Page({ params }: { params: { userId: string } }) {
     const data = new FileReader();
     data.addEventListener("load", () => {
       setImage(data.result);
-      // console.log(data.result);
+      console.log(e.target.files.item(0).size / 1024);
     });
     data.readAsDataURL(e.target.files[0]);
   };
 
+  const sendImagesInChunks = (roomId: string) => {
+    if (image) {
+      socket.emit("sendTotalChunks", { totalChunks: image, roomId: roomId });
+      socket.emit("imageComplete", { roomId: roomId });
+    }
+  };
+
   // API calls
   useEffect(() => {
+    // handle window resise
+    const handleResize = () => {
+      setwindowWidth(window.innerWidth);
+    };
+
+    // Add event listener to track window resize
+    window.addEventListener("resize", handleResize);
+
     setLoading(true);
     fetchData();
     setLoading(false);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
+  useEffect(() => {}, []);
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[100vh] content-center animate-bounce">
@@ -124,94 +173,62 @@ export default function Page({ params }: { params: { userId: string } }) {
     );
   }
 
-  if (err) {
+  if (!isAuth) {
     return (
       <div className="flex items-center justify-center h-[100vh] content-center ">
-        <div className="font-bold items-center content-center">
-          Error running server
-        </div>
+        <input
+          className="m-2 bg-transparent border-b-2 text-white outline-none cursor-text"
+          type="text"
+          placeholder="Enter Password"
+          onChange={(e) => {
+            const value = e.currentTarget.value;
+            setPassword((prev) => {
+              return value as string;
+            });
+          }}
+        />
+
+        <button
+          onClick={() => {
+            handleLogIn(userId, password);
+          }}
+          className="border-2 py-1 px-3 rounded-md"
+        >
+          L0g 1n
+        </button>
       </div>
     );
   }
 
-  // return (
-  //   <div>
-  //     <div>Dashboard</div>
-  //   </div>
-  // );
-
   return (
-    <div>
-      <div>My Room: {encryptedUserId}</div>
-      <input
-        id="text"
-        placeholder="Enter your message"
-        type="text"
-        value={messageToBeSent}
-        onChange={(e) => setMessageToBeSent(e.target.value)}
-        className="text-black p-2 border rounded"
-      />
-      <div className="m-2"></div>
-
-      <input
-        placeholder="Enter room no"
-        id="room"
-        type="text"
-        className="text-black p-2 border rounded"
-      />
-      <input
-        placeholder="Enter room no"
-        id="file"
-        type="file"
-        className="text-black p-2 border rounded"
-        onChange={(e) => {
-          imgToBlob(e);
-        }}
-      />
-
-      {image ? (
-        <img className="w-auto h-auto block max-h-20 " src={image} alt="" />
-      ) : (
-        <div>No image</div>
-      )}
-
-      <button
-        onClick={() => {
-          sendMessage(
-            (document.getElementById("room") as HTMLInputElement).value
-          );
-        }}
-        className="ml-2 bg-blue-500 text-white p-2 rounded"
-      >
-        Send
-      </button>
-
-      <div className="mt-4">
-        <h3>Messages:</h3>
-        <div className="flex-col-reverse overflow-y-scroll border-white border rounded-lg px-2 py-1 h-[75vh] md:h-[70vh] ">
-          {allMessages.length > 0 ? (
-            allMessages.map((msg, index) => (
-              <div key={index} className="p-2 border-b ">
-                {msg.image ? (
-                  <div>
-                    image
-                    <img
-                      className="w-auto h-auto block max-h-20 "
-                      src={msg.image}
-                      alt=""
-                    />
-                  </div>
-                ) : (
-                  <div>No image</div>
-                )}
-                <strong>Room {msg.roomId}:</strong> {msg.message}
-              </div>
-            ))
-          ) : (
-            <div>No messages yet</div>
+    <userPageContext.Provider
+      value={{
+        setDisplayMessageBox,
+        displayMessageBox,
+        userData,
+        messageList,
+        setMessageList,
+        currentChatFriend,
+        setCurrentChatFriend,
+        sendMessageViaSocket,
+        forceRender,
+        setForceRender,
+      }}
+    >
+      <div className="pt-6 flex items-center justify-center">
+        <div className="border-white border rounded-lg w-[75vw] h-[75vh] ">
+          {(!displayMessageBox || windowWidth >= 900) && (
+            <div className="float-left w-full md:w-[35%] border-red-400 border h-full ">
+              <FriendList />
+            </div>
+          )}
+          {(displayMessageBox || windowWidth >= 900) && (
+            <div className="float-right w-full md:w-[65%] h-full border-blue-400 border">
+              <Messagebox />
+            </div>
           )}
         </div>
       </div>
-    </div>
+    </userPageContext.Provider>
   );
 }
