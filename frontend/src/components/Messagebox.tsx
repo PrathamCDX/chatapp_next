@@ -219,7 +219,7 @@ function SendBox({
             setMessageToBeSent("");
             elements.value = "";
           }}
-          className="bg-blue-400 rounded-lg ml-1 pl-2 py-1 "
+          className="bg-blue-400 rounded-lg ml-1 px-2 py-1 "
         >
           Send
         </button>
