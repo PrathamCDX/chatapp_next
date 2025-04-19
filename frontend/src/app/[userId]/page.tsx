@@ -219,7 +219,7 @@ export default function Page({
       }}
     >
       <div className="pt-6 flex items-center justify-center">
-        <div className="border-white border rounded-lg w-[75vw] h-[75vh] ">
+        <div className="border-white border rounded-lg w-[90vw] sm:w-[75vw] h-[75vh] ">
           {(!displayMessageBox || windowWidth >= 900) && (
             <div className="float-left w-full md:w-[35%] border-red-400 border h-full ">
               <FriendList />

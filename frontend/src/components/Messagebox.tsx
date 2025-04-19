@@ -40,7 +40,7 @@ function MessageHeading({ friendname }: { friendname?: string }) {
     : {};
 
   return (
-    <div className=" border rounded-lg h-[52px] p-2 md:pl-10  flex items-center gap-x-10">
+    <div className=" border rounded-lg h-[52px] p-2 md:pl-10  flex items-center gap-x-2 sm:gap-x-10">
       <div
         className="md:hidden cursor-pointer"
         onClick={() => {
@@ -52,7 +52,7 @@ function MessageHeading({ friendname }: { friendname?: string }) {
       >
         <IoIosArrowBack size={25} />
       </div>
-      <div>
+      <div className="ml-4">
         <CgProfile size={25} />
       </div>
       <div className="text-xl">{friendname}</div>
@@ -185,7 +185,7 @@ function SendBox({
       </div>
       <div className="flex items-center justify-center w-[200px]  px-3">
         {/* <input size={10} type="file" name="" id="" /> */}
-        <div className="flex items-center justify-center  h-[50px]">
+        {/* <di className="flex items-center justify-center  h-[50px]">
           <label className="flex flex-col items-center justify-center w-[50px] my-1 h-full  border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 ">
             <div className="flex flex-col items-center justify-center px-2">
               <svg
@@ -206,7 +206,7 @@ function SendBox({
             </div>
             <input id="dropzone-file" type="file" className="hidden" />
           </label>
-        </div>
+        </di> */}
         <button
           onClick={() => {
             setMessageList &&
@@ -219,7 +219,7 @@ function SendBox({
             setMessageToBeSent("");
             elements.value = "";
           }}
-          className="bg-blue-400 rounded-lg ml-3 px-2 py-1 "
+          className="bg-blue-400 rounded-lg ml-1 pl-2 py-1 "
         >
           Send
         </button>
