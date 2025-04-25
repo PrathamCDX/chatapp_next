@@ -6,7 +6,7 @@ import { encryptor } from "@/encryptDecrypt";
 import axios, { Axios } from "axios";
 import { redirect } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-
+import Cookies from "js-cookie";
 interface userDataType {
   username: string | null;
   password: string | null;
@@ -37,7 +37,9 @@ const Signup = () => {
     setAuthSignUpResponse(response.data);
     if (response.data.success == true) {
       setLoggedIn && setLoggedIn(true);
-      redirect("/" + username);
+      Cookies.set("auth-token", response.data.token);
+      console.log("cookie set");
+      redirect("/user/" + username);
     } else {
       alert(response.data.errMessage);
     }

@@ -1,6 +1,7 @@
 import express from "express";
 import userModel from "../models/user.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import encrypt from "encryptjs";
 const authRouter = express.Router();
 
@@ -15,10 +16,12 @@ const encryptor = async (password, salt) => {
 
 // sign in
 authRouter.post("/signin", async (req, res) => {
+  console.log("signin");
   try {
     const { username, password } = req.body;
     console.log(password);
     const checkUser = await userModel.findOne({ userName: username });
+    if (!checkUser) throw new Error("user not found");
     console.log(checkUser);
     const encrypted_password_from_signin = password;
     const encrypted_password_from_db = checkUser.password;
@@ -28,10 +31,13 @@ authRouter.post("/signin", async (req, res) => {
       encrypted_password_from_db,
       function (err, result) {
         if (result) {
+          var token = jwt.sign({ username: username }, process.env.SECRET_KEY);
+
           return res.send({
             success: true,
             statusCode: 200,
-            errMessage: null,
+            errMessage: "signin successfulL ",
+            token,
           });
         } else {
           return res.send({
@@ -74,10 +80,12 @@ authRouter.post("/signup", async (req, res) => {
     });
 
     await saveTest.save().then(() => {
+      var token = jwt.sign({ username: username }, process.env.SECRET_KEY);
       return res.send({
         success: true,
         statusCode: 200,
         errMessage: "Signed up successfully",
+        token,
       });
     });
   } catch (err) {

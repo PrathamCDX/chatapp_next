@@ -38,7 +38,7 @@ export default function Page({
 }) {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState(false);
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(true);
   const [messageList, setMessageList] = useState<string[]>([]);
   const [forceRender, setForceRender] = useState({ render: true });
   const [windowWidth, setwindowWidth] = useState(window.innerWidth);

@@ -12,6 +12,8 @@
     "axios": "^1.7.7",
     "cookies": "^0.9.1",
     "cryptr": "^6.3.0",
+    "jose": "^6.0.10",
+    "js-cookie": "^3.0.5",
     "next": "^15.3.0",
     "nookies": "^2.5.2",
     "react": "^18.3.1",
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
