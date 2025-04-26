@@ -5,6 +5,7 @@ import DemoPage from "./demoPage";
 import Signup from "@/components/Signup";
 import { createContext, useEffect, useState } from "react";
 import { redirect } from "next/navigation";
+import { LineWave } from "react-loader-spinner";
 
 interface logInContextType {
   loggedIn: boolean;
@@ -18,6 +19,7 @@ export default function Home() {
 
   return (
     <logInContext.Provider value={{ loggedIn, setLoggedIn }}>
+      ;
       <div className="flex flex-col  items-center justify-center w-[100vw] h-[100vh]">
         <div className="font-bold text-5xl">
           {isSignUp ? <Signup /> : <Signin />}

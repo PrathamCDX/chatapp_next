@@ -7,6 +7,8 @@ import axios, { Axios } from "axios";
 import { redirect } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
+// import LineWaveComponent from "./Loader";
+import Loader from "./Loader";
 interface userDataType {
   username: string | null;
   password: string | null;
@@ -26,6 +28,7 @@ const Signup = () => {
   });
   const [rePassword, setRePassword] = useState("");
   const [authSignUpResponse, setAuthSignUpResponse] = useState<any>();
+  const [loading, setLoading] = useState(false);
 
   const authSignUp = async ({ username, password }: userDataType) => {
     console.log(process.env.NEXT_PUBLIC_SOCKET_URI + "auth/signup");
@@ -40,8 +43,17 @@ const Signup = () => {
       Cookies.set("auth-token", response.data.token);
       console.log("cookie set");
       redirect("/user/" + username);
+    } else if (
+      response.data.success == false &&
+      response.data.statusCode == 200
+    ) {
+      setLoading(false);
+      alert("Username already exists");
+      // console.log("Username already exists", response.data);
     } else {
-      alert(response.data.errMessage);
+      setLoading(false);
+      alert("error in signup");
+      // console.log("error in signup", response.data);
     }
   };
 
@@ -92,6 +104,7 @@ const Signup = () => {
         <button
           className="border-2 py-1 px-3 rounded-md"
           onClick={() => {
+            setLoading(true);
             if (rePassword != userData.password) {
               alert("Incorrect password");
             } else if (
@@ -109,7 +122,15 @@ const Signup = () => {
             }
           }}
         >
-          Sign up
+          <div className="w-[100px] p-1">
+            {loading ? (
+              <div>
+                <Loader />
+              </div>
+            ) : (
+              <div>Sign up</div>
+            )}
+          </div>
         </button>
       </div>
     </>

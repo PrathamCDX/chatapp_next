@@ -4,9 +4,11 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 import Cookies from "js-cookie";
+import Loader from "./Loader";
 
 const Signin = () => {
   const [userInfo, setUserInfo] = useState({ username: "", password: "" });
+  const [loading, setLoading] = useState(false);
   let inputCss =
     "m-2 bg-transparent border-b-2 text-white outline-none cursor-text";
 
@@ -24,6 +26,7 @@ const Signin = () => {
       redirect("/user/" + userInfo.username);
     } else {
       alert("error in login");
+      setLoading(false);
     }
   };
   return (
@@ -70,10 +73,19 @@ const Signin = () => {
         <button
           className="border-2 py-1 px-3 rounded-md"
           onClick={() => {
+            setLoading(true);
             handleSignIn();
           }}
         >
-          click
+          <div className="w-[100px] p-1">
+            {loading ? (
+              <div>
+                <Loader />
+              </div>
+            ) : (
+              <div>Sign In</div>
+            )}
+          </div>
         </button>
       </div>
     </>
