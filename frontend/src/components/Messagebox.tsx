@@ -115,7 +115,7 @@ function MessageList({
     // console.log("msg list changed", messageList);
   }, [messageList]);
 
-  if (messageListLoader) {
+  if (messageListLoader && currentChatFriend !== "Choose a friend") {
     return (
       <div className="items-center justify-center flex pt-4">
         <Loader />
@@ -145,7 +145,7 @@ function MessageList({
             </div>
           ) : (
             <div className="items-center justify-center flex">
-              <Loader />
+              No chats till now
             </div>
           )
         ) : (

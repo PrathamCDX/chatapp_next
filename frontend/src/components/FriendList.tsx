@@ -16,6 +16,7 @@ export default function FriendList() {
     currentChatFriend,
     setCurrentChatFriend,
     forceRender,
+    setMessageListLoader,
 
     ...others
   } = context ? context : {};
@@ -59,6 +60,7 @@ export default function FriendList() {
                   className="cursor-pointer"
                   key={name}
                   onClick={() => {
+                    setMessageListLoader && setMessageListLoader(true);
                     setCurrentChatFriend && setCurrentChatFriend(name);
                   }}
                 >
