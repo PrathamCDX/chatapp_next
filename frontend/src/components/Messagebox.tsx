@@ -117,7 +117,7 @@ function MessageList({
 
   if (messageListLoader) {
     return (
-      <div>
+      <div className="items-center justify-center flex pt-4">
         <Loader />
       </div>
     );

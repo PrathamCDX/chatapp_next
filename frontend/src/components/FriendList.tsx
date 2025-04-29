@@ -68,7 +68,7 @@ export default function FriendList() {
             })}
           </div>
         ) : (
-          <div>
+          <div className="items-center justify-center flex pt-4">
             <Loader />
           </div>
         )}
