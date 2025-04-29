@@ -36,6 +36,8 @@ export default function Page({
 }: {
   params: Promise<{ userId: string }>;
 }) {
+  const [messageListLoader, setMessageListLoader] = useState(true);
+  const [friendListLoader, setFriendListLoader] = useState(false);
   const [password, setPassword] = useState("");
   const [err, setErr] = useState(false);
   const [isAuth, setIsAuth] = useState(true);
@@ -216,6 +218,10 @@ export default function Page({
         sendMessageViaSocket,
         forceRender,
         setForceRender,
+        messageListLoader,
+        setMessageListLoader,
+        friendListLoader,
+        setFriendListLoader,
       }}
     >
       <div className="pt-6 flex items-center justify-center">

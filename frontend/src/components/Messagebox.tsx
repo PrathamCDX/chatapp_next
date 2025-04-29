@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { IoIosArrowBack } from "react-icons/io";
+import Loader from "./Loader";
 
 export default function Messagebox() {
   const context = useContext(userPageContext);
@@ -68,9 +69,13 @@ function MessageList({
   friendname?: string;
 }) {
   const context = useContext(userPageContext);
-  const { currentChatFriend, setMessageList, messageList } = context
-    ? context
-    : {};
+  const {
+    currentChatFriend,
+    setMessageList,
+    messageList,
+    setMessageListLoader,
+    messageListLoader,
+  } = context ? context : {};
   const [getChatResponse, setGetChatResponse] = useState<any>(false);
   const scrollToBottom = () => {
     var divElement = document.getElementById("messagelist");
@@ -97,6 +102,7 @@ function MessageList({
       // console.log("getChat response", response.data.data);
       setGetChatResponse(response.data.data);
       setMessageList && setMessageList(response.data.data);
+      setMessageListLoader && setMessageListLoader(false);
     };
 
     if (username && friendname) {
@@ -108,6 +114,14 @@ function MessageList({
     //
     // console.log("msg list changed", messageList);
   }, [messageList]);
+
+  if (messageListLoader) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col-reverse overflow-y-scroll p-2 border border-yellow-300 rounded-lg h-[calc(100%-52px-60px-4px)] my-1 ">
@@ -131,7 +145,7 @@ function MessageList({
             </div>
           ) : (
             <div className="items-center justify-center flex">
-              No chats till now
+              <Loader />
             </div>
           )
         ) : (

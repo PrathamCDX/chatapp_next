@@ -11,6 +11,10 @@ interface userPageContextType {
   sendMessageViaSocket?: (roomId: string, messageToBeSent: string) => void;
   forceRender?: { render: boolean };
   setForceRender?: React.Dispatch<React.SetStateAction<{ render: boolean }>>;
+  messageListLoader?: boolean;
+  setMessageListLoader?: React.Dispatch<React.SetStateAction<boolean>>;
+  friendListLoader?: boolean;
+  setFriendListLoader?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 // Create context with an initial value of `undefined` or a default object
 const userPageContext = createContext<userPageContextType | undefined | never>(
