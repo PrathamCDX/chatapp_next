@@ -186,7 +186,23 @@ function SendBox({
   };
 
   return (
-    <div className="absolute bottom-0 bg-[#ffffff1a] transpa h-[60px] border border-purple-700 px-2 w-full flex justify-between">
+    <div
+      onKeyDown={(event) => {
+        if (event.key === "Enter") {
+          // console.log("Enter key pressed!");
+          setMessageList &&
+            setMessageList((prevMessages: string[]) => {
+              return [...prevMessages, "0" + messageToBeSent];
+            });
+          sendMessageViaSocket &&
+            sendMessageViaSocket(friendname, messageToBeSent);
+          handleClick({ username, friendname });
+          setMessageToBeSent("");
+          elements.value = "";
+        }
+      }}
+      className="absolute bottom-0 bg-[#ffffff1a] transpa h-[60px] border border-purple-700 px-2 w-full flex justify-between"
+    >
       <div className="w-full h-[50px]">
         <textarea
           onChange={(e) => {

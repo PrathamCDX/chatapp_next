@@ -28,7 +28,7 @@ export default function FriendList() {
         process.env.NEXT_PUBLIC_SOCKET_URI + "data/friendList",
         { username: username }
       );
-      console.log(response);
+      // console.log(response);
       if (response.data.success == true) {
         // console.log("success true");
         setgetFriendListResponse(response.data.data);
