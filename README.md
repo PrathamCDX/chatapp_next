@@ -45,10 +45,12 @@ chat_app_next/
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v16+ recommended)
 - npm or yarn
 
 ### Backend Setup
+
 1. Navigate to the backend folder:
    ```sh
    cd backend
@@ -64,6 +66,7 @@ chat_app_next/
    The backend will run on the port specified in your environment variables or default to 3001.
 
 ### Frontend Setup
+
 1. Navigate to the frontend folder:
    ```sh
    cd frontend
@@ -79,6 +82,7 @@ chat_app_next/
    The frontend will run on [http://localhost:3000](http://localhost:3000).
 
 ### Environment Variables
+
 - Configure your backend and frontend `.env` files as needed.
 - Example for frontend (`frontend/.env.local`):
   ```env
@@ -91,6 +95,7 @@ chat_app_next/
 - **frontend/**: Next.js app with React components, context, and pages for chat UI.
 
 ## Main Components (Frontend)
+
 - `FriendList.tsx`: Displays the user's friends and their message status.
 - `Messagebox.tsx`: Shows chat messages with a selected friend.
 - `Signin.tsx` / `Signup.tsx`: Authentication forms.
@@ -98,9 +103,6 @@ chat_app_next/
 - `Searchbar.tsx`: Search for friends.
 
 ## Scripts
+
 - `npm run dev` (frontend): Start Next.js in development mode.
 - `npm start` (backend): Start the Express server.
-
-## License
-
-This project is for educational purposes.
