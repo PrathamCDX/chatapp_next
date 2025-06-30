@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { IoIosArrowBack } from "react-icons/io";
-import Loader from "./Loader";
+import { Loader } from "./Loader";
 
 export default function Messagebox() {
   const context = useContext(userPageContext);

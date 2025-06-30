@@ -4,7 +4,7 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 import Cookies from "js-cookie";
-import Loader from "./Loader";
+import { Loader } from "./Loader";
 
 const Signin = () => {
   const [userInfo, setUserInfo] = useState({ username: "", password: "" });

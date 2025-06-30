@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 // import LineWaveComponent from "./Loader";
-import Loader from "./Loader";
+import { Loader } from "./Loader";
 interface userDataType {
   username: string | null;
   password: string | null;

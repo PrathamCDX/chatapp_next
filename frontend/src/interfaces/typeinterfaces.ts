@@ -11,4 +11,13 @@ interface userDataType {
   password: string | null;
 }
 
-export type { axiosResponseInterface, userDataType };
+interface LoadingScreenProps {
+  message?: string;
+  progress?: number;
+  showProgressBar?: boolean;
+  spinnerColor?: string;
+  backgroundColor?: string;
+  textColor?: string;
+}
+
+export type { axiosResponseInterface, userDataType, LoadingScreenProps };

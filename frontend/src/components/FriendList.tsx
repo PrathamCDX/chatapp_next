@@ -5,7 +5,7 @@ import userPageContext from "@/context/userPageContext";
 // import { userPageContext } from "@/app/[userId]/page";
 import axios from "axios";
 import { axiosResponseInterface } from "@/interfaces/typeinterfaces";
-import Loader from "./Loader";
+import { Loader } from "./Loader";
 
 export default function FriendList() {
   const context = useContext(userPageContext);

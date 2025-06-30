@@ -6,6 +6,8 @@ import Signup from "@/components/Signup";
 import { createContext, useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import { LineWave } from "react-loader-spinner";
+import { pingServer } from "@/lib/helper";
+import { LoadingScreen } from "@/components/Loader";
 
 interface logInContextType {
   loggedIn: boolean;
@@ -16,10 +18,24 @@ const logInContext = createContext<logInContextType | undefined>(undefined);
 export default function Home() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [serverLoading, setServerLoading] = useState(true);
+
+  useEffect(() => {
+    pingServer(setServerLoading);
+  }, []);
+
+  if (serverLoading) {
+    return (
+      <div>
+        <div>
+          <LoadingScreen />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <logInContext.Provider value={{ loggedIn, setLoggedIn }}>
-      ;
       <div className="flex flex-col  items-center justify-center w-[100vw] h-[100vh]">
         <div className="font-bold text-5xl">
           {isSignUp ? <Signup /> : <Signin />}
