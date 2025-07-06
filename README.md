@@ -10,6 +10,42 @@ A real-time chat application with a Next.js frontend and a Node.js/Express backe
 - **Seen Status**: Unread message indicator for new messages.
 - **Modern UI**: Built with React, Tailwind CSS, and Next.js.
 
+## V2 Architecture & Features
+
+The `v2` version introduces improved scalability, performance, and maintainability for the chat application. Key enhancements include:
+
+- **Redis Caching**: Frequently accessed user and friend data are cached in Redis for faster reads and writes.
+- **MongoDB Bulk Operations**: Uses MongoDB bulkWrite for efficient batch updates, especially for friend management and message status.
+- **Message Queue (RabbitMQ)**: Decouples write operations using a producer/consumer pattern, improving reliability and throughput.
+- **Controllers & Modularization**: Backend logic is organized into versioned controllers (e.g., `controllers/v2/`), making it easier to extend and maintain.
+- **Improved Error Handling**: More robust error checks and logging throughout the backend.
+
+### Key V2 Backend Files
+
+- `backend/controllers/v2/data.cotrollers.js`: Handles friend management, message sending, and integrates Redis and RabbitMQ.
+- `backend/helper/messageQueue/rabbitMQ.producer.js`: Publishes operations to the queue.
+- `backend/helper/messageQueue/rabbitMQ.consumer.js`: Consumes and processes queued operations.
+- `backend/models/v2/`: Updated Mongoose models for v2 data structures.
+
+### How V2 Works
+
+1. **Friend Add/Update**:
+
+   - Checks Redis for user/friend data.
+   - Updates Redis and pushes a bulk operation to RabbitMQ.
+   - Consumer processes the queue and writes to MongoDB in batches.
+
+2. **Messaging**:
+
+   - Similar flow: updates Redis, queues MongoDB writes for eventual consistency.
+
+3. **Benefits**:
+   - Faster user experience due to Redis caching.
+   - Reduced MongoDB load via bulk operations.
+   - More resilient and scalable backend with message queue decoupling.
+
+---
+
 ## Project Structure
 
 ```
