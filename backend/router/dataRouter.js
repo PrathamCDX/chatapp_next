@@ -139,7 +139,7 @@ dataRouter.post("/sendmsg", async (req, res) => {
   console.log("sendmsg");
   try {
     const { username, friendname, message } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     let senderChat = await msgModel.findOne({
       userName: username,
       friendName: friendname,

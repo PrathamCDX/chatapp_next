@@ -8,7 +8,7 @@ const authRouter = express.Router();
 // encryptor
 const secretKey = process.env.SECRET_KEY;
 const salt = Number(process.env.PASS_SALT);
-const encryptor = async (password, salt) => {
+export const encryptor = async (password, salt) => {
   const hash = await bcrypt.hash(password, salt);
 
   return hash;
