@@ -29,9 +29,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   } catch (err) {
     console.log("❌ Invalid token:", err);
+    return NextResponse.redirect(new URL("/", req.url));
   }
 }
 
 export const config = {
-  matcher: "/user/:userId",
+  matcher: ["/", "/user/:userId"],
 };
