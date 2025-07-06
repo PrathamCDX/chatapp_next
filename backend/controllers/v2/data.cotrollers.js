@@ -275,10 +275,18 @@ const friendList = async (req, res) => {
       friendList = Object.keys(user.friendList);
     }
 
+    let data = friendList.map((chat, key) => {
+      return {
+        friendName: chat,
+        seenStatus: false,
+        _id: key,
+      };
+    });
+
     return res.send({
       success: true,
       statusCode: 200,
-      data: friendList,
+      data: data ? data : [],
       errMessage: "fetched succesfully",
     });
   } catch (error) {
@@ -309,6 +317,7 @@ const getChat = async (req, res) => {
     let redisUserJSON = await JSON.parse(redisUser);
 
     let chats_ = redisUserJSON.friendList[friendname];
+
     return res.send({
       success: true,
       statusCode: 200,
