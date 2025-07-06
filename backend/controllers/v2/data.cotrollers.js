@@ -6,7 +6,6 @@ import { Error } from "mongoose";
 
 import dotenv from "dotenv";
 import { setRedis } from "../../helper/utils.js";
-import { reduceVertices } from "three/examples/jsm/utils/SceneUtils.js";
 dotenv.config();
 
 const redisUrl = String(process.env.REDIS_URL);
