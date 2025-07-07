@@ -15,7 +15,7 @@ interface userDataType {
 }
 
 const salt = Number(process.env.NEXT_PUBLIC_PASS_SALT);
-
+const regex = /^[A-Za-z0-9 ]*$/;
 const Signup = () => {
   const context = useContext(logInContext);
   // const context : logInContextType = useContext(logInContext);
@@ -68,18 +68,27 @@ const Signup = () => {
       <div className="border-4 rounded-xl p-6 w-60 flex flex-col  items-center justify-center">
         <h3>Sign up</h3>
         <div className="p-3 ">
+          {/* {username} */}
           <input
             className={inputCss}
             type="text"
             placeholder="Enter Username"
             onChange={(e) => {
-              const value = e.currentTarget.value;
+              let value = e.currentTarget.value;
 
-              setUserData((prev) => {
-                return { ...prev, username: value };
-              });
+              value = value.replace(/[^A-Za-z0-9 ]/g, "");
+              if (value !== e.currentTarget.value) {
+                alert("Special character not allowed in username");
+                e.currentTarget.value = value;
+              }
+              setUserData((prev) => ({
+                ...prev,
+                username: value,
+              }));
             }}
           />
+
+          {/* password */}
           <input
             className={inputCss}
             type="text"
@@ -92,6 +101,7 @@ const Signup = () => {
               });
             }}
           />
+          {/* re password */}
           <input
             className={inputCss}
             type="text"
@@ -114,11 +124,11 @@ const Signup = () => {
             ) {
               alert("Enter credentials");
             } else {
-              authSignUp(userData);
-              // authSignUp(userData).then((response) => {
-              //   console.log(response);
-              // });
-              // redirect with encrypted username as params
+              if (!regex.test(userData.username)) {
+                alert("special character not allowed in username");
+              } else {
+                authSignUp(userData);
+              }
             }
           }}
         >
