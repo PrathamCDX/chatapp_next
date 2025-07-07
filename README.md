@@ -80,6 +80,28 @@ chat_app_next/
 
 ## Getting Started
 
+## Example `.env` Files
+
+### Backend (`backend/.env`)
+
+```env
+PORT=8000
+MONGO_URI=mongodb://localhost:27017/chatapp
+JWT_SECRET=your_jwt_secret
+REDIS_URL=redis://localhost:6379
+RABBIT_URL=amqp://localhost
+CORS_ORIGIN=http://localhost:3000
+SOCKET_IO_PATH=/socket.io
+```
+
+### Frontend (`frontend/.env.local`)
+
+```env
+NEXT_PUBLIC_SOCKET_URI=http://localhost:8000/
+NEXT_PUBLIC_API_URL=http://localhost:8000/
+```
+
+
 ### Prerequisites
 
 - Node.js (v16+ recommended)
